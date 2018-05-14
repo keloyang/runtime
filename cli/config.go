@@ -412,7 +412,7 @@ func loadConfiguration(configPath string, ignoreLogging bool) (resolvedConfigPat
 	defaultHypervisorConfig := vc.HypervisorConfig{
 		HypervisorPath:        defaultHypervisorPath,
 		KernelPath:            defaultKernelPath,
-		ImagePath:             defaultImagePath,
+		ImagePath:             "",
 		InitrdPath:            defaultInitrdPath,
 		FirmwarePath:          defaultFirmwarePath,
 		MachineAccelerators:   defaultMachineAccelerators,

@@ -78,6 +78,9 @@ type qemuArch interface {
 
 	// appendVFIODevice appends a VFIO device to devices
 	appendVFIODevice(devices []govmmQemu.Device, vfioDevice VFIODevice) []govmmQemu.Device
+
+	// appendDrive appends a drive device to devices
+	appendDriveDevice(devices []govmmQemu.Device, drive DriveDevice) []govmmQemu.Device
 }
 
 type qemuArchBase struct {
@@ -485,6 +488,18 @@ func (q *qemuArchBase) appendVFIODevice(devices []govmmQemu.Device, vfioDevice V
 	devices = append(devices,
 		govmmQemu.VFIODevice{
 			BDF: vfioDevice.BDF,
+		},
+	)
+
+	return devices
+}
+
+func (q *qemuArchBase) appendDriveDevice(devices []govmmQemu.Device, drive DriveDevice) []govmmQemu.Device {
+	devices = append(devices,
+		govmmQemu.DriveDevice{
+			File:      drive.File,
+			ID:        drive.ID,
+			Interface: drive.Interface,
 		},
 	)
 

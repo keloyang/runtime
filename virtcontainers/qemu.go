@@ -303,8 +303,12 @@ func (q *qemu) createSandbox(sandboxConfig SandboxConfig) error {
 		return err
 	}
 
+	biosPath := "/var/lib/kata/bios.bin"
+	cbfsPath := "/var/lib/kata/cbfs.rom"
 	kernel := govmmQemu.Kernel{
 		Path:       kernelPath,
+		BiosPath:   biosPath,
+		CbfsPath:   cbfsPath,
 		InitrdPath: initrdPath,
 		Params:     q.kernelParameters(),
 	}
@@ -360,13 +364,27 @@ func (q *qemu) createSandbox(sandboxConfig SandboxConfig) error {
 	devices = q.arch.append9PVolumes(devices, sandboxConfig.Volumes)
 	devices = q.arch.appendConsole(devices, q.getSandboxConsole(sandboxConfig.ID))
 
-	if initrdPath == "" {
-		devices, err = q.appendImage(devices)
-		if err != nil {
-			return err
+	if biosPath != "" && cbfsPath != "" {
+		devices = q.arch.appendDriveDevice(devices,
+			DriveDevice{
+				File:      biosPath,
+				ID:        "qboot_rom",
+				Interface: "pflash",
+			})
+		devices = q.arch.appendDriveDevice(devices,
+			DriveDevice{
+				File:      cbfsPath,
+				ID:        "kernel_rom",
+				Interface: "pflash",
+			})
+	} else {
+		if initrdPath == "" {
+			devices, err = q.appendImage(devices)
+			if err != nil {
+				return err
+			}
 		}
 	}
-
 	var ioThread *govmmQemu.IOThread
 	if q.config.BlockDeviceDriver == VirtioSCSI {
 		devices, ioThread = q.arch.appendSCSIController(devices, q.config.EnableIOThreads)

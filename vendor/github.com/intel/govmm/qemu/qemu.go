@@ -957,6 +957,30 @@ func (bridgeDev BridgeDevice) QemuParams(config *Config) []string {
 	return qemuParams
 }
 
+// DriveDevice represents a qemu drive.
+type DriveDevice struct {
+	File      string
+	ID        string
+	Interface string
+}
+
+// Valid returns true if the BridgeDevice structure is valid and complete.
+func (drive DriveDevice) Valid() bool {
+	return true
+}
+
+// QemuParams returns the qemu parameters built out of this bridge device.
+func (drive DriveDevice) QemuParams(config *Config) []string {
+	var qemuParams []string
+
+	deviceParam := fmt.Sprintf("if=%s,file=%s,id=%s",
+		drive.Interface, drive.File, drive.ID)
+	qemuParams = append(qemuParams, "-drive")
+	qemuParams = append(qemuParams, deviceParam)
+
+	return qemuParams
+}
+
 // VSOCKDevice represents a AF_VSOCK socket.
 type VSOCKDevice struct {
 	ID string
@@ -1132,6 +1156,9 @@ type Memory struct {
 type Kernel struct {
 	// Path is the guest kernel path on the host filesystem.
 	Path string
+
+	BiosPath string
+	CbfsPath string
 
 	// InitrdPath is the guest initrd path on the host filesystem.
 	InitrdPath string
@@ -1417,6 +1444,9 @@ func (config *Config) appendVGA() {
 }
 
 func (config *Config) appendKernel() {
+	if config.Kernel.CbfsPath != "" {
+		return
+	}
 	if config.Kernel.Path != "" {
 		config.qemuParams = append(config.qemuParams, "-kernel")
 		config.qemuParams = append(config.qemuParams, config.Kernel.Path)

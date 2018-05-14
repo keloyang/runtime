@@ -226,7 +226,7 @@ func (conf *HypervisorConfig) valid() (bool, error) {
 	}
 
 	if conf.ImagePath == "" && conf.InitrdPath == "" {
-		return false, fmt.Errorf("Missing image and initrd path")
+		//return false, fmt.Errorf("Missing image and initrd path")
 	}
 
 	if conf.DefaultVCPUs == 0 {

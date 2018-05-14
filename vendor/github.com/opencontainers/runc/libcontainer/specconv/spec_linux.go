@@ -240,13 +240,7 @@ func CreateLibcontainerConfig(opts *CreateOpts) (*configs.Config, error) {
 		config.OomScoreAdj = *spec.Process.OOMScoreAdj
 	}
 	if spec.Process.Capabilities != nil {
-		config.Capabilities = &configs.Capabilities{
-			Bounding:    spec.Process.Capabilities.Bounding,
-			Effective:   spec.Process.Capabilities.Effective,
-			Permitted:   spec.Process.Capabilities.Permitted,
-			Inheritable: spec.Process.Capabilities.Inheritable,
-			Ambient:     spec.Process.Capabilities.Ambient,
-		}
+		config.Capabilities = &configs.Capabilities{}
 	}
 	createHooks(spec, config)
 	config.Version = specs.Version

@@ -22,7 +22,7 @@ const defaultQemuPath = "/usr/bin/qemu-system-x86_64"
 
 const defaultQemuMachineType = QemuPC
 
-const defaultQemuMachineOptions = "accel=kvm,kernel_irqchip,nvdimm"
+const defaultQemuMachineOptions = "accel=kvm,kernel_irqchip"
 
 const defaultPCBridgeBus = "pci.0"
 

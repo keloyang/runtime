@@ -327,6 +327,14 @@ type SandboxStatus struct {
 	Annotations map[string]string
 }
 
+//VFIODevice is a drive meant to be passed to the hypervisor
+// to be used by the Virtual Machine.
+type DriveDevice struct {
+	File      string
+	ID        string
+	Interface string
+}
+
 // SandboxConfig is a Sandbox configuration.
 type SandboxConfig struct {
 	ID string
